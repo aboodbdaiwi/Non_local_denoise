@@ -1,5 +1,5 @@
  This is a matlab toolbox that can be used to denoise time-series data (e.g., diffusion MRI) in the complex domain based on a two-step non-local principal component analysis (PCA) approach. 
- You may run the demo script, `demo.m`, to obtain an idea of how this toolbox can be used to improve the image quality for diffusion MRI with a few image volumes. 
+ You may run the demo script, `demo_simulation.m`, to obtain an idea of how this toolbox can be used to improve the image quality for diffusion MRI with a few image volumes. 
 
 If you use the toolbox, please consider citing the following publications:
 
