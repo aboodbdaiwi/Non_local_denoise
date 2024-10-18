@@ -1,12 +1,12 @@
 
-function denoise_image_all=denoise_nonlocal_svs(KSP2,nordic,kernel)
+function denoise_image_all=denoise_nonlocal_svs222(KSP2,nordic,kernel)
 
 
 
 mask_all = zeros(size(KSP2));
 denoise_image_all = zeros(size(KSP2));
 
-for slice=floor(kernel/2)+1:1:size(KSP2,3)-floor(kernel/2)
+for slice=floor(kernel/2)+1:floor(kernel/2):size(KSP2,3)-floor(kernel/2)
 im_r= squeeze(KSP2(:,:,slice-floor(kernel/2):slice+floor(kernel/2),:));
 %
 %    im_r(:,:,1:34)= real(squeeze(dwi0_noisy(:,:,slice,1:34)));
@@ -61,14 +61,14 @@ numm2=numm2+1;
 [disall,numberall] = sort(D(:,numm2));
 
 first_dis = disall(2);
-k = min(sum(disall<first_dis*1.2),140);
+k = min(sum(disall<first_dis*1.15),140)
 
 [dis,number] = sort(D(:,numm2));
 sorted=number(1:1+k);
 sorted_patches=squeeze(noisy_patch2(:,sorted));
 sorted_patches=reshape(sorted_patches,[kernel,kernel,kernel,dir,k+1]);
-sorted_patches=permute(sorted_patches,[1 2 4 3 5]);
-sorted_patches=reshape(sorted_patches,[kernel*kernel*dir,kernel*(k+1)]);
+%sorted_patches=permute(sorted_patches,[1 2 4 3 5]);
+sorted_patches=reshape(sorted_patches,[kernel*kernel*kernel,dir*(k+1)]);
 tempsorted_patches=sorted_patches;
 sigg=1;
 M= min(size(tempsorted_patches));% assuming M<=N
@@ -91,9 +91,9 @@ if flag==1
 temp=temp';
 end
 
-denoise_patch(:,1:kernel)=temp(:,1:kernel);
-tempp=reshape(denoise_patch(:,1:kernel),[kernel,kernel,dir,kernel]);
-tempp=permute(tempp,[1 2 4 3]);
+denoise_patch(:,1:dir)=temp(:,1:dir);
+tempp=reshape(denoise_patch(:,1:dir),[kernel,kernel,kernel,dir]);
+%tempp=permute(tempp,[1 2 4 3]);
 denoise_image(i:i+kernel-1,j:j+kernel-1,:,:)=  denoise_image(i:i+kernel-1,j:j+kernel-1,:,:)+tempp(1:kernel,1:kernel,:,:)*1;
 mask(i:i+kernel-1,j:j+kernel-1,:,:)=mask(i:i+kernel-1,j:j+kernel-1,:,:)+1;
 end

@@ -1,5 +1,5 @@
 
-function denoise_image_all=denoise_nonlocal_mppca(KSP2,nordic,kernel)
+function denoise_image_all=denoise_nonlocal_mppca222(KSP2,nordic,kernel)
 
 
 mask_all = zeros(size(KSP2));
@@ -7,7 +7,7 @@ mask_all = zeros(size(KSP2));
 denoise_image_all = zeros(size(KSP2));
 
 
-for slice=floor(kernel/2)+1:3:size(KSP2,3)-floor(kernel/2)
+for slice=floor(kernel/2)+1:floor(kernel/2):size(KSP2,3)-floor(kernel/2)
 
 im_r= squeeze(KSP2(:,:,slice-floor(kernel/2):slice+floor(kernel/2),:));
 %
@@ -46,7 +46,7 @@ numm=0;
 for i=1:step:size(noisy_image,1)-kernel+1
 for j=1:step:size(noisy_image,2)-kernel+1
 numm=numm+1;
-noisy_patch3(:,:,:,:,numm)=squeeze(nordic(i:i+kernel-1,j:j+kernel-1,slice-1:slice+1,:));
+noisy_patch3(:,:,:,:,numm)=squeeze(nordic(i:i+kernel-1,j:j+kernel-1,slice-floor(kernel/2):slice+floor(kernel/2),:));
 end
 end
 noisy_patch3=reshape(noisy_patch3,[kernel*kernel*kernel*dir,numm]);
@@ -59,12 +59,16 @@ numm2=0;
 for i=1:step:size(noisy_image,1)-kernel+1
 for j=1:step:size(noisy_image,2)-kernel+1
 numm2=numm2+1;
-[dis,number] = sort(D(:,numm2));
+[disall,number] = sort(D(:,numm2));
+
+first_dis = disall(2);
+k = min(sum(disall<first_dis*1.15),140)
+
 sorted=number(1:1+k);
 sorted_patches=squeeze(noisy_patch2(:,sorted));
 sorted_patches=reshape(sorted_patches,[kernel,kernel,kernel,dir,k+1]);
-sorted_patches=permute(sorted_patches,[1 2 4 3 5]);
-sorted_patches=reshape(sorted_patches,[kernel*kernel*dir,kernel*(k+1)]);
+%sorted_patches=permute(sorted_patches,[1 2 4 3 5]);
+sorted_patches=reshape(sorted_patches,[kernel*kernel*kernel,dir*(k+1)]);
 centering=0;
 MM=size(sorted_patches,2);
 NNN=size(sorted_patches,1);
@@ -83,7 +87,7 @@ gamma = (MM - (0:R-centering-1)) / NNN;
 rangeMP = 4*sqrt(gamma(:));
 rangeData = vals(1:R-centering) - vals(R-centering);
 sigmasq_2 = rangeData./rangeMP;
-th = find(sigmasq_2 < sigmasq_1, 1)
+th = find(sigmasq_2 < sigmasq_1, 1);
 if isempty(th)
 th=MM
 end
@@ -107,9 +111,9 @@ keep=1:th-1;
 %
 temp=u(:,keep) * sigma(keep,keep) * v(:,keep)';
 temp=temp';
-denoise_patch(:,1:kernel)=temp(:,1:kernel);
-tempp=reshape(denoise_patch(:,1:kernel),[kernel,kernel,dir,kernel]);
-tempp=permute(tempp,[1 2 4 3]);
+denoise_patch(:,1:dir)=temp(:,1:dir);
+tempp=reshape(denoise_patch(:,1:dir),[kernel,kernel,kernel,dir]);
+%tempp=permute(tempp,[1 2 4 3]);
 denoise_image(i:i+kernel-1,j:j+kernel-1,:,:)=  denoise_image(i:i+kernel-1,j:j+kernel-1,:,:)+tempp(1:kernel,1:kernel,:,:)*1;
 mask(i:i+kernel-1,j:j+kernel-1,:,:)=mask(i:i+kernel-1,j:j+kernel-1,:,:)+1;
 end
@@ -118,7 +122,7 @@ denoise_image=denoise_image./(eps+mask);
 
 %clear D
 end
-denoise_image_all(:,:,slice-floor(kernel/2):slice+floor(kernel/2),:) = denoise_image;
+denoise_image_all(:,:,slice-floor(kernel/2):slice+floor(kernel/2),:) = denoise_image_all(:,:,slice-floor(kernel/2):slice+floor(kernel/2),:)+denoise_image;
 
 mask_all(:,:,slice-floor(kernel/2):slice+floor(kernel/2),:) =mask_all(:,:,slice-floor(kernel/2):slice+floor(kernel/2),:) +1;
 
