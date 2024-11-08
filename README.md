@@ -3,10 +3,7 @@
 
 If you use the toolbox, please consider citing the following publications:
 
-1) Xinyu Ye, Xiaodong Ma, Ziyi Pan, Zhe Zhang, Hua Guo, Kâmil Uğurbil, Xiaoping Wu. Denoising complex-valued diffusion MR images using a two-step non-local principal component analysis approach. In preparation.
-2) Xinyu Ye, Xiaodong Ma, Ziyi Pan, Zhe Zhang, Edward Auerbach, Hua Guo, Kâmil Uğurbil, Xiaoping Wu. Denoising diffusion MRI with an improved non-local principal component analysis approach. ISMRM 2024.
-3) Xinyu Ye, Xiaodong Ma, Ziyi Pan, Steen Moller, Eddie Auerbach, Kamil Ugurbil, Xiaoping Wu, Hua Guo. Non-local low rank denoising method for complex-valued DWI. ISMRM 2022.
-
+1) Xinyu Ye, Xiaodong Ma, Ziyi Pan, Zhe Zhang, Hua Guo, Kâmil Uğurbil, Xiaoping Wu. Denoising complex-valued diffusion MR images using a two-step non-local principal component analysis approach. bioRxiv: DOI: 10.1101/2024.10.30.621081.
 
 
 ### Copyright & License Notice
