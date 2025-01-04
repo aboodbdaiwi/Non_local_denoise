@@ -4,19 +4,14 @@ addpath ./utils
 addpath ./NORDIC_Raw-main
 addpath ./NIfTI_20140122
 addpath ./Denoising-master
-%%% A script demonstrating how to characterize noise estimation in the complex domain 
-%%% using our extended MPPCA. 
-%%%
-%%% Referenece:  Xiaodong Ma, Xiaoping Wu, Kamil Ugurbil, NeuroImage 2020
-%%%
-%%% Author:      Xiaoping Wu, 8/13/2024
+%%% Author:      Xiaoping Wu Xinyu Ye
 
 
 %% Simulate noisy data with 2 shell b1000 and b2000
 mask0 = dwi0~=0;
 %% parameter setting
 %ks = 5; % kernel size for noise estimation
-indz4test = 15:39; %41-10:49+10; % here a few slices (no smaller than 2*ks-1) are denoised for testing
+indz4test = 20:26; %41-10:49+10; % here a few slices (no smaller than 2*ks-1) are denoised for testing
 nVols= 9; % number of images volumes to consider. 
 % parallel computation
 
@@ -27,25 +22,11 @@ kernelSizes= 7:2:7;
 %Sigmas_mppca= [];
 %PSNR_sig= zeros(length(levels), length(kernelSizes));
 for idx=1: length(levels)
-    for gh =1:1
-        nVols = nVols;
     level = levels(idx);
 
     GenerateNoisyDataComplex;
 
 
-    % %% Preprocess data by removing the backgrounds to accelerate computation
-    % remove background to save computation power
-    % [isub{1},isub{2},isub{3}]= ind2sub(size(mask0),find(mask0));
-    % size_mask0 = size(mask0);
-    % for ndim = 1:3
-    %     ind_start{ndim} = max(min(isub{ndim})-ks,1);
-    %     ind_end{ndim}   = min(max(isub{ndim})+ks,size_mask0(ndim));
-    % end
-    % full fov but with reduced background.
-    % mask = mask0(ind_start{1}:ind_end{1},ind_start{2}:ind_end{2},ind_start{3}:ind_end{3});
-    % dwi  = dwi0 (ind_start{1}:ind_end{1},ind_start{2}:ind_end{2},ind_start{3}:ind_end{3},:);
-    % dwi_noisy = dwi0_noisy(ind_start{1}:ind_end{1},ind_start{2}:ind_end{2},ind_start{3}:ind_end{3},:);
 
     mask = mask0;
     dwi= dwi0;
@@ -149,10 +130,10 @@ for n=1:size(KSP2,4);
 end
     
     KSP2(isnan(abs(KSP2)))=0;
-    %% no local denoise
-nonlocal_real=denoise_nonlocal_svs(real(KSP2),abs(denoise_image),ks);
+    %% non local denoise
+nonlocal_com=denoise_nonlocal_svs(KSP2,abs(denoise_image),ks);
 % or mppca
-nonlocal_com=denoise_nonlocal_mppca(KSP2(:,:,:,:),abs(denoise_image(:,:,:,:)),ks);
+%nonlocal_com=denoise_nonlocal_mppca(KSP2(:,:,:,:),abs(denoise_image(:,:,:,:)),ks);
 
     
 for n=1:size(KSP2,4);
@@ -169,7 +150,7 @@ foldername = ['/denoise/',num2str(level)];
            eval(str)
 
       
-    end
+    
 end
 
 

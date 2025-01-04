@@ -2,11 +2,14 @@
 function denoise_image_all=denoise_nonlocal_svs222(KSP2,nordic,kernel)
 
 
+fprintf('--------start denoising--------\n');
 
 mask_all = zeros(size(KSP2));
 denoise_image_all = zeros(size(KSP2));
 
 for slice=floor(kernel/2)+1:floor(kernel/2):size(KSP2,3)-floor(kernel/2)
+      fprintf('--- denoising: slice i=%i (%i total) --- \n',slice, size(KSP2,3))
+
 im_r= squeeze(KSP2(:,:,slice-floor(kernel/2):slice+floor(kernel/2),:));
 %
 %    im_r(:,:,1:34)= real(squeeze(dwi0_noisy(:,:,slice,1:34)));
@@ -58,10 +61,11 @@ for i=1:step:size(noisy_image,1)-kernel+1
 for j=1:step:size(noisy_image,2)-kernel+1
 numm2=numm2+1;
 
+
 [disall,numberall] = sort(D(:,numm2));
 
 first_dis = disall(2);
-k = min(sum(disall<first_dis*1.15),140)
+k = min(sum(disall<first_dis*1.15),140);
 
 [dis,number] = sort(D(:,numm2));
 sorted=number(1:1+k);
